@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jamu Mbak Ari - Layanan Online</title>
+    
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --primary-color: #2e7d32;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #dddddd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: var(--primary-color);
+            color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .realtime-clock {
+            font-weight: 600;
+            font-size: 1.05em;
+            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 8px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs button {
+            flex: 1;
+            padding: 14px;
+            background: #e0e0e0;
+            color: #444444;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tabs button.active {
+            background: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="password"],
+        input[type="datetime-local"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95em;
+            background-color: #fafafa;
+            color: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: #ffffff;
+        }
+
+        button {
+            background: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-danger { background-color: #d32f2f; }
+        .btn-warning { background-color: #f57c00; }
+        .btn-success { background-color: #2e7d32; }
+
+        .btn-wa {
+            background-color: #25d366;
+            color: #ffffff;
+            margin-top: 4px;
+            font-size: 0.85em;
+            padding: 6px 10px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .product-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            background: #ffffff;
+            color: #333333;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .product-card h4 {
+            margin-bottom: 4px;
+        }
+
+        .product-card p {
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .notification {
+            padding: 14px;
+            border-left: 5px solid var(--primary-color);
+            background: #e8f5e9;
+            color: #1b5e20;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.88em;
+        }
+
+        table, th, td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 0.8em;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .badge-active { background-color: #0288d1; }
+        .badge-done { background-color: #388e3c; }
+
+        .helper-text {
+            font-size: 0.85em;
+            color: #666666;
+            margin-top: -8px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .admin-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .admin-input-group input {
+            padding: 4px 6px;
+            font-size: 0.85em;
+        }
+
+        .total-box {
+            font-weight: bold;
+            color: #2e7d32;
+            margin-top: 4px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Jamu Mbak Ari</h1>
+        <div class="realtime-clock" id="clock">Memuat Waktu...</div>
+    </div>
+
+    <div class="nav-tabs">
+        <button id="btn-cust" class="active" onclick="switchTab('customer')">Dashboard Customer</button>
+        <button id="btn-adm" onclick="switchTab('admin')">Dashboard Admin</button>
+    </div>
+
+    <!-- DASHBOARD CUSTOMER -->
+    <div id="dashboard-customer">
+        <div class="card">
+            <h3>Pemberitahuan dari Admin</h3>
+            <div id="cust-notifications">
+                <p class="helper-text">Memuat notifikasi...</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Daftar & Harga Jamu</h3>
+            <span class="helper-text">*Daftar harga di bawah ini hanya untuk informasi produk. Pemesanan dilakukan melalui form pemesanan.</span>
+            <div class="product-grid" id="cust-product-list">
+                <p class="helper-text">Memuat produk...</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Form Pemesanan Jamu</h3>
+            <form id="form-order" onsubmit="submitOrder(event)">
+                <div class="form-group">
+                    <label for="cust-name">Nama Customer:</label>
+                    <input type="text" id="cust-name" required placeholder="Masukkan nama Anda">
+                </div>
+                <div class="form-group">
+                    <label for="cust-address">Alamat Lengkap:</label>
+                    <textarea id="cust-address" required placeholder="Masukkan alamat lengkap pengiriman"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cust-wa">Nomor WhatsApp (Wajib berawalan 089... atau 08...):</label>
+                    <input type="text" id="cust-wa" placeholder="Contoh: 08951234567" required>
+                    <small class="helper-text">Catatan: Jangan menggunakan format +62.</small>
+                </div>
+                <div class="form-group">
+                    <label for="cust-note">Keluhan / Catatan / Deskripsi:</label>
+                    <textarea id="cust-note" placeholder="Tuliskan keluhan kesehatan atau racikan jamu yang diinginkan..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cust-time">Atur Jam, Hari, Tanggal, Bulan, Tahun Pengiriman:</label>
+                    <input type="datetime-local" id="cust-time" required>
+                </div>
+                <button type="submit" style="width: 100%; padding: 14px;">Kirim Pesan Langsung ke Admin</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- DASHBOARD ADMIN -->
+    <div id="dashboard-admin" style="display: none;">
+        <div id="admin-auth" class="card">
+            <div class="nav-tabs">
+                <button type="button" id="tab-login" class="active" onclick="toggleAuth('login')">Login Admin</button>
+                <button type="button" id="tab-register" onclick="toggleAuth('register')">Daftar Admin</button>
+            </div>
+
+            <form id="form-login" onsubmit="loginAdmin(event)">
+                <div class="form-group">
+                    <label for="login-name">Nama Admin:</label>
+                    <input type="text" id="login-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-pass">Kata Sandi:</label>
+                    <input type="password" id="login-pass" required>
+                </div>
+                <button type="submit" style="width: 100%;">Masuk / Login</button>
+            </form>
+
+            <form id="form-register" style="display: none;" onsubmit="registerAdmin(event)">
+                <div class="form-group">
+                    <label for="reg-name">Nama Admin:</label>
+                    <input type="text" id="reg-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-wa">Nomor WhatsApp Admin (Wajib 089... / 08...):</label>
+                    <input type="text" id="reg-wa" placeholder="Contoh: 08951234567" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-pass">Kata Sandi:</label>
+                    <input type="password" id="reg-pass" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-code">Kata Sandi / Kode Khusus Admin:</label>
+                    <input type="password" id="reg-code" placeholder="Masukkan kode otorisasi rahasia" required>
+                </div>
+                <button type="submit" style="width: 100%;">Daftar Akun Admin</button>
+            </form>
+        </div>
+
+        <div id="admin-panel" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Panel Admin: <span id="admin-display-name"></span></h2>
+                <button class="btn-danger" onclick="logoutAdmin()">Keluar / Logout</button>
+            </div>
+
+            <div class="card">
+                <h3>Penyetingan Otomatis Background Warna-Warni</h3>
+                <div class="form-group">
+                    <label for="theme-select">Pilih Skema Warna Tampilan:</label>
+                    <select id="theme-select" onchange="changeTheme(this.value)">
+                        <option value="#f4f6f9">Default (Hijau Soft)</option>
+                        <option value="#e3f2fd">Biru Segar</option>
+                        <option value="#fff3e0">Orange Hangat</option>
+                        <option value="#f3e5f5">Ungu Soft</option>
+                        <option value="#e8f5e9">Hijau Herbal</option>
+                        <option value="#222222">Mode Gelap (Dark Mode)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Fitur Kelola Notifikasi (Admin Only)</h3>
+                <form onsubmit="saveNotification(event)">
+                    <input type="hidden" id="notif-id" value="">
+                    <div class="form-group">
+                        <label for="notif-text">Tulis Pesan Notifikasi untuk Customer:</label>
+                        <textarea id="notif-text" required placeholder="Tulis pengumuman atau info penting di sini..."></textarea>
+                    </div>
+                    <button type="submit" id="notif-btn">Tambah Notifikasi</button>
+                </form>
+                <div id="admin-notif-list" style="margin-top: 15px;"></div>
+            </div>
+
+            <div class="card">
+                <h3>Penyetingan Daftar Harga Jamu</h3>
+                <h4>Tambah / Kelola Produk Jamu</h4>
+                <br>
+                <form onsubmit="addProduct(event)">
+                    <div class="form-group">
+                        <label for="prod-name">Nama Jamu:</label>
+                        <input type="text" id="prod-name" required placeholder="Contoh: Jamu Kunyit Asam">
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-price">Harga Jamu (Rp):</label>
+                        <input type="number" id="prod-price" required placeholder="Contoh: 10000">
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-img">Upload Foto Jamu:</label>
+                        <input type="file" id="prod-img" accept="image/*" required>
+                    </div>
+                    <button type="submit">Upload & Simpan Jamu</button>
+                </form>
+                <div class="product-grid" id="admin-product-list"></div>
+            </div>
+
+            <div class="card">
+                <h3>History Pesanan & Status Pengiriman</h3>
+                <span class="helper-text">*Pisahkan dengan koma jika barang/harga lebih dari 1. Total dihitung otomatis.</span>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tanggal & Waktu</th>
+                                <th>Nama Customer</th>
+                                <th>No. WhatsApp</th>
+                                <th>Alamat Lengkap</th>
+                                <th>Keluhan / Catatan</th>
+                                <th>Waktu Kirim</th>
+                                <th style="min-width: 170px;">Rincian Jamu & Ongkir (Admin)</th>
+                                <th>Status</th>
+                                <th style="min-width: 180px;">Pilih Status & Kirim Pesan WA</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const SPECIAL_ADMIN_CODE = "JAMUMBAKARI123";
+    let loggedInAdmin = localStorage.getItem('loggedInAdmin') || null;
+
+    let ordersData = JSON.parse(localStorage.getItem('jamu_orders') || '{}');
+    let productsData = JSON.parse(localStorage.getItem('jamu_products') || '{}');
+    let notificationsData = JSON.parse(localStorage.getItem('jamu_notifications') || '{}');
+    let adminsData = JSON.parse(localStorage.getItem('jamu_admins') || '{}');
+
+    function saveData(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    function calculateSubtotal(priceString) {
+        if (!priceString) return 0;
+        const prices = String(priceString).split(',');
+        return prices.reduce((acc, curr) => acc + (parseFloat(curr.trim()) || 0), 0);
+    }
+
+    // INITIAL RENDER
+    window.addEventListener('DOMContentLoaded', () => {
+        renderProducts();
+        renderNotifications();
+        renderHistory();
+        checkAdminAuth();
+    });
+
+    // RENDER FUNCTIONS
+    window.renderProducts = function() {
+        const custContainer = document.getElementById('cust-product-list');
+        const adminContainer = document.getElementById('admin-product-list');
+        
+        let html = '';
+        Object.keys(productsData).forEach((key) => {
+            const p = productsData[key];
+            html += `
+                <div class="product-card">
+                    <img src="${p.img}" alt="${p.name}">
+                    <h4>${p.name}</h4>
+                    <p>Rp ${Number(p.price).toLocaleString('id-ID')}</p>
+                    ${loggedInAdmin ? `<button class="btn-danger" onclick="deleteProduct('${key}')">Hapus</button>` : ''}
+                </div>
+            `;
+        });
+
+        custContainer.innerHTML = html || '<p class="helper-text">Belum ada daftar produk jamu.</p>';
+        if (adminContainer) adminContainer.innerHTML = html || '<p class="helper-text">Belum ada daftar produk jamu.</p>';
+    };
+
+    window.renderNotifications = function() {
+        const custContainer = document.getElementById('cust-notifications');
+        const adminContainer = document.getElementById('admin-notif-list');
+
+        let custHtml = '';
+        let adminHtml = '';
+
+        Object.keys(notificationsData).forEach((key) => {
+            const text = notificationsData[key];
+            custHtml += `<div class="notification">${text}</div>`;
+            adminHtml += `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; background:rgba(0,0,0,0.04); padding:10px; border-radius:6px;">
+                    <span>${text}</span>
+                    <div>
+                        <button class="btn-warning" onclick="editNotif('${key}', '${text.replace(/'/g, "\\'")}')">Edit</button>
+                        <button class="btn-danger" onclick="deleteNotif('${key}')">Hapus</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        custContainer.innerHTML = custHtml || '<p class="helper-text">Belum ada notifikasi baru dari Admin.</p>';
+        if (adminContainer) adminContainer.innerHTML = adminHtml || '<p class="helper-text">Belum ada notifikasi yang dibuat.</p>';
+    };
+
+    window.renderHistory = function() {
+        const tbody = document.getElementById('history-table-body');
+        let html = '';
+
+        const sortedKeys = Object.keys(ordersData).reverse();
+        sortedKeys.forEach((key) => {
+            const o = ordersData[key];
+            const isCompleted = o.status === 'Pesanan Selesai';
+            const badgeClass = isCompleted ? 'badge-done' : 'badge-active';
+            
+            const jamuName = o.jamuName || '';
+            const jamuPriceStr = o.jamuPrice !== undefined ? String(o.jamuPrice) : '';
+            const ongkir = Number(o.ongkir || 0);
+
+            const subtotalJamu = calculateSubtotal(jamuPriceStr);
+            const total = subtotalJamu + ongkir;
+
+            html += `
+                <tr>
+                    <td><small>${o.createdAt}</small></td>
+                    <td><strong>${o.name}</strong></td>
+                    <td>${o.wa}</td>
+                    <td>${o.address}</td>
+                    <td>${o.note}</td>
+                    <td><small>${o.deliveryTime}</small></td>
+                    <td>
+                        <div class="admin-input-group">
+                            <input type="text" placeholder="Nama Jamu" value="${jamuName}" onchange="updateOrderDetails('${key}', 'jamuName', this.value)">
+                            <input type="text" placeholder="Harga Jamu" value="${jamuPriceStr}" onchange="updateOrderDetails('${key}', 'jamuPrice', this.value)">
+                            <input type="number" placeholder="Ongkir (Rp)" value="${ongkir || ''}" onchange="updateOrderDetails('${key}', 'ongkir', this.value)">
+                            <div class="total-box">Total: Rp ${total.toLocaleString('id-ID')}</div>
+                        </div>
+                    </td>
+                    <td><span class="badge ${badgeClass}">${o.status}</span></td>
+                    <td>
+                        <select onchange="updateOrderStatus('${key}', this.value)">
+                            <option value="Diterima Admin" ${o.status === 'Diterima Admin' ? 'selected' : ''}>1. Pesanan Diterima</option>
+                            <option value="Sedang Diproses" ${o.status === 'Sedang Diproses' ? 'selected' : ''}>2. Sedang Diproses</option>
+                            <option value="Sedang Diantar" ${o.status === 'Sedang Diantar' ? 'selected' : ''}>3. Sedang Diantar</option>
+                            <option value="Pesanan Selesai" ${o.status === 'Pesanan Selesai' ? 'selected' : ''}>4. Pesanan Selesai</option>
+                        </select>
+                        <br>
+                        <button class="btn-wa" onclick="sendWAStatus('${key}', 'terima')">WA: Diterima</button>
+                        <button class="btn-wa" onclick="sendWAStatus('${key}', 'proses')">WA: Diproses</button>
+                        <button class="btn-wa" onclick="sendWAStatus('${key}', 'antar')">WA: Diantar (Tunai)</button>
+                        <button class="btn-wa" onclick="sendWAStatus('${key}', 'selesai')">WA: Selesai</button>
+                        <br>
+                        <button class="btn-danger" style="margin-top:6px; font-size:0.8em; padding:4px 8px; width:100%;" onclick="deleteOrder('${key}')">Hapus History</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html || '<tr><td colspan="9" style="text-align:center;">Belum ada history pesanan masuk.</td></tr>';
+    };
+
+    // FORM ACTIONS & LOCALSTORAGE HANDLING
+    window.submitOrder = function(e) {
+        e.preventDefault();
+        const wa = document.getElementById('cust-wa').value.trim();
+
+        if (!/^(089|08)[0-9]{8,11}$/.test(wa)) {
+            alert('Format Nomor WhatsApp Salah!\nNomor Wajib Menggunakan Awalan 089 atau 08.');
+            return;
+        }
+
+        const orderId = 'order_' + Date.now();
+        const newOrder = {
+            name: document.getElementById('cust-name').value.trim(),
+            address: document.getElementById('cust-address').value.trim(),
+            wa: wa,
+            note: document.getElementById('cust-note').value.trim(),
+            deliveryTime: document.getElementById('cust-time').value.replace('T', ' Jam '),
+            jamuName: '',
+            jamuPrice: '',
+            ongkir: 0,
+            status: 'Diterima Admin',
+            createdAt: new Date().toLocaleString('id-ID')
+        };
+
+        ordersData[orderId] = newOrder;
+        saveData('jamu_orders', ordersData);
+        renderHistory();
+
+        const textWA = `Halo Admin Jamu Mbak Ari, saya ingin memesan jamu:%0A%0A` +
+                       `*Nama:* ${encodeURIComponent(newOrder.name)}%0A` +
+                       `*Alamat:* ${encodeURIComponent(newOrder.address)}%0A` +
+                       `*Keluhan/Catatan:* ${encodeURIComponent(newOrder.note)}%0A` +
+                       `*Waktu Pengiriman:* ${encodeURIComponent(newOrder.deliveryTime)}`;
+        
+        alert('Pesanan Anda berhasil dikirim! Anda akan disalurkan langsung ke WhatsApp Admin.');
+        window.open(`https://wa.me/?text=${textWA}`, '_blank');
+        document.getElementById('form-order').reset();
+    };
+
+    window.addProduct = function(e) {
+        e.preventDefault();
+        const name = document.getElementById('prod-name').value.trim();
+        const price = document.getElementById('prod-price').value;
+        const imgInput = document.getElementById('prod-img');
+
+        const reader = new FileReader();
+        reader.onload = function() {
+            const prodId = 'prod_' + Date.now();
+            productsData[prodId] = { name, price, img: reader.result };
+            saveData('jamu_products', productsData);
+            renderProducts();
+            alert('Produk Jamu berhasil ditambahkan ke katalog!');
+            document.getElementById('prod-name').value = '';
+            document.getElementById('prod-price').value = '';
+            imgInput.value = '';
+        };
+        reader.readAsDataURL(imgInput.files[0]);
+    };
+
+    window.deleteProduct = function(key) {
+        if (confirm("Hapus produk jamu ini dari daftar?")) {
+            delete productsData[key];
+            saveData('jamu_products', productsData);
+            renderProducts();
+        }
+    };
+
+    window.saveNotification = function(e) {
+        e.preventDefault();
+        const text = document.getElementById('notif-text').value.trim();
+        const id = document.getElementById('notif-id').value;
+
+        if (!id) {
+            const notifId = 'notif_' + Date.now();
+            notificationsData[notifId] = text;
+        } else {
+            notificationsData[id] = text;
+            document.getElementById('notif-id').value = '';
+            document.getElementById('notif-btn').innerText = 'Tambah Notifikasi';
+        }
+
+        saveData('jamu_notifications', notificationsData);
+        renderNotifications();
+        document.getElementById('notif-text').value = '';
+    };
+
+    window.editNotif = function(key, text) {
+        document.getElementById('notif-text').value = text;
+        document.getElementById('notif-id').value = key;
+        document.getElementById('notif-btn').innerText = 'Update Notifikasi';
+    };
+
+    window.deleteNotif = function(key) {
+        if (confirm("Hapus notifikasi ini?")) {
+            delete notificationsData[key];
+            saveData('jamu_notifications', notificationsData);
+            renderNotifications();
+        }
+    };
+
+    window.updateOrderDetails = function(key, field, value) {
+        if (ordersData[key]) {
+            ordersData[key][field] = value;
+            saveData('jamu_orders', ordersData);
+        }
+    };
+
+    window.updateOrderStatus = function(key, status) {
+        if (ordersData[key]) {
+            ordersData[key].status = status;
+            saveData('jamu_orders', ordersData);
+            renderHistory();
+        }
+    };
+
+    window.deleteOrder = function(key) {
+        if (confirm("Yakin ingin menghapus riwayat pesanan ini secara permanen?")) {
+            delete ordersData[key];
+            saveData('jamu_orders', ordersData);
+            renderHistory();
+        }
+    };
+
+    window.registerAdmin = function(e) {
+        e.preventDefault();
+        const name = document.getElementById('reg-name').value.trim();
+        const wa = document.getElementById('reg-wa').value.trim();
+        const pass = document.getElementById('reg-pass').value;
+        const code = document.getElementById('reg-code').value;
+
+        if (!/^(089|08)[0-9]{8,11}$/.test(wa)) {
+            alert('Nomor WhatsApp Admin Wajib Diawali 089 atau 08!');
+            return;
+        }
+
+        if (code !== SPECIAL_ADMIN_CODE) {
+            alert('Kode Khusus Admin Salah! Pendaftaran Ditolak.');
+            return;
+        }
+
+        const adminId = 'admin_' + Date.now();
+        adminsData[adminId] = { name, wa, pass };
+        saveData('jamu_admins', adminsData);
+        alert('Pendaftaran Admin Berhasil! Silakan masuk via menu Login.');
+        window.toggleAuth('login');
+    };
+
+    window.loginAdmin = function(e) {
+        e.preventDefault();
+        const name = document.getElementById('login-name').value.trim();
+        const pass = document.getElementById('login-pass').value;
+
+        const found = Object.values(adminsData).find(a => a.name === name && a.pass === pass);
+
+        if (name === 'Admin' && pass === SPECIAL_ADMIN_CODE) {
+            loggedInAdmin = name;
+            localStorage.setItem('loggedInAdmin', name);
+            checkAdminAuth();
+            return;
+        }
+
+        if (found) {
+            loggedInAdmin = name;
+            localStorage.setItem('loggedInAdmin', name);
+            checkAdminAuth();
+        } else {
+            alert('Nama Admin atau Kata Sandi Salah!');
+        }
+    };
+
+    window.logoutAdmin = function() {
+        loggedInAdmin = null;
+        localStorage.removeItem('loggedInAdmin');
+        checkAdminAuth();
+    };
+
+    window.sendWAStatus = function(key, type) {
+        const order = ordersData[key];
+        const names = (order.jamuName || '-').split(',');
+        const prices = String(order.jamuPrice || '0').split(',');
+        const ongkir = Number(order.ongkir || 0);
+
+        let itemDetailsText = "";
+        let subtotalJamu = 0;
+
+        if (names.length > 1 || prices.length > 1) {
+            names.forEach((item, i) => {
+                const itemName = item.trim() || 'Jamu';
+                const itemPrice = parseFloat((prices[i] || '0').trim()) || 0;
+                subtotalJamu += itemPrice;
+                itemDetailsText += `%0A  • ${encodeURIComponent(itemName)}: Rp ${itemPrice.toLocaleString('id-ID')}`;
+            });
+        } else {
+            const singleName = (names[0] || '-').trim();
+            const singlePrice = parseFloat((prices[0] || '0').trim()) || 0;
+            subtotalJamu = singlePrice;
+            itemDetailsText = `%0A  • ${encodeURIComponent(singleName)}: Rp ${singlePrice.toLocaleString('id-ID')}`;
+        }
+
+        const total = subtotalJamu + ongkir;
+        let rincianBiaya = `%0A%0A*📦 Rincian Pesanan:*` + itemDetailsText +
+                           `%0A  • Ongkir: Rp ${ongkir.toLocaleString('id-ID')}` +
+                           `%0A*💵 Total Pembayaran: Rp ${total.toLocaleString('id-ID')}*`;
+
+        let message = "";
+        if (type === 'terima') {
+            message = `Halo Kak ${encodeURIComponent(order.name)} ✨%0A%0A` +
+                      `Terima kasih sudah memesan di *Jamu Mbak Ari*! Pesanan Kakak telah *DITERIMA* oleh admin dan siap dikerjakan.${rincianBiaya}%0A%0AMohon tunggu pembaruan status berikutnya ya, Kak! 🙏`;
+        } else if (type === 'proses') {
+            message = `Halo Kak ${encodeURIComponent(order.name)} 🌿%0A%0A` +
+                      `Kabar baik! Pesanan jamu Kakak saat ini *SEDANG DIPROSES & DIRACIK* dengan bahan-bahan terbaik agar tetap segar.${rincianBiaya}%0A%0AMohon bersabar sebentar ya, Kak! 😊`;
+        } else if (type === 'antar') {
+            message = `Halo Kak ${encodeURIComponent(order.name)} 🛵💨%0A%0A` +
+                      `Pesanan jamu Kakak *SEDANG DIANTAR* menuju lokasi:%0A📍 *${encodeURIComponent(order.address)}*${rincianBiaya}%0A%0A` +
+                      `Mohon menyiapkan pembayaran tunai (pas) sebesar *Rp ${total.toLocaleString('id-ID')}* saat kurir tiba. Terima kasih! ✨`;
+        } else if (type === 'selesai') {
+            message = `Halo Kak ${encodeURIComponent(order.name)} 🥰%0A%0A` +
+                      `Pesanan jamu Kakak telah *SELESAI* diserahterimakan.${rincianBiaya}%0A%0A` +
+                      `Terima kasih banyak sudah mempercayakan kesehatan Kakak pada *Jamu Mbak Ari*. Selamat menikmati dan semoga sehat selalu! 🌿💚`;
+        }
+
+        let formattedWA = order.wa;
+        if (formattedWA.startsWith('0')) {
+            formattedWA = '62' + formattedWA.substring(1);
+        }
+
+        window.open(`https://wa.me/${formattedWA}?text=${message}`, '_blank');
+    };
+</script>
+
+<script>
+    function updateClock() {
+        const now = new Date();
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+        document.getElementById('clock').innerText = 
+            `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB | ${days[now.getDay()]}, ${String(now.getDate()).padStart(2, '0')} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function switchTab(tab) {
+        document.getElementById('dashboard-customer').style.display = (tab === 'customer') ? 'block' : 'none';
+        document.getElementById('dashboard-admin').style.display = (tab === 'admin') ? 'block' : 'none';
+        document.getElementById('btn-cust').classList.toggle('active', tab === 'customer');
+        document.getElementById('btn-adm').classList.toggle('active', tab === 'admin');
+
+        if (tab === 'admin') checkAdminAuth();
+    }
+
+    function toggleAuth(type) {
+        document.getElementById('form-login').style.display = (type === 'login') ? 'block' : 'none';
+        document.getElementById('form-register').style.display = (type === 'register') ? 'block' : 'none';
+        document.getElementById('tab-login').classList.toggle('active', type === 'login');
+        document.getElementById('tab-register').classList.toggle('active', type === 'register');
+    }
+
+    function checkAdminAuth() {
+        const loggedInAdmin = localStorage.getItem('loggedInAdmin');
+        const authCard = document.getElementById('admin-auth');
+        const panelCard = document.getElementById('admin-panel');
+
+        if (loggedInAdmin) {
+            authCard.style.display = 'none';
+            panelCard.style.display = 'block';
+            document.getElementById('admin-display-name').innerText = loggedInAdmin;
+            if (window.renderProducts) window.renderProducts();
+            if (window.renderNotifications) window.renderNotifications();
+            if (window.renderHistory) window.renderHistory();
+        } else {
+            authCard.style.display = 'block';
+            panelCard.style.display = 'none';
+        }
+    }
+
+    function changeTheme(color) {
+        document.documentElement.style.setProperty('--bg-color', color);
+        if (color === '#222222') {
+            document.documentElement.style.setProperty('--card-bg', '#333333');
+            document.documentElement.style.setProperty('--text-color', '#ffffff');
+            document.documentElement.style.setProperty('--border-color', '#444444');
+        } else {
+            document.documentElement.style.setProperty('--card-bg', '#ffffff');
+            document.documentElement.style.setProperty('--text-color', '#333333');
+            document.documentElement.style.setProperty('--border-color', '#dddddd');
+        }
+    }
+</script>
+
+</body>
+</html>
