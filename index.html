@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jamu Mbak Ari - Layanan Online</title>
     
+    <!-- Firebase SDK Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --bg-color: #f4f6f9;
@@ -455,17 +459,28 @@
 </div>
 
 <script>
+    // --- KONFIGURASI FIREBASE ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBQINQEjj_rBKSXnF7VOOru2c9lRoXpGSo",
+        authDomain: "jamumba-ari.firebaseapp.com",
+        projectId: "jamumba-ari",
+        storageBucket: "jamumba-ari.firebasestorage.app",
+        messagingSenderId: "154473943176",
+        appId: "1:154473943176:web:d80835d2d202e7cee38f3d",
+        measurementId: "G-0HKML16GEC",
+        databaseURL: "https://jamumba-ari-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
     const SPECIAL_ADMIN_CODE = "JAMUMBAKARI123";
     let loggedInAdmin = localStorage.getItem('loggedInAdmin') || null;
 
-    let ordersData = JSON.parse(localStorage.getItem('jamu_orders') || '{}');
-    let productsData = JSON.parse(localStorage.getItem('jamu_products') || '{}');
-    let notificationsData = JSON.parse(localStorage.getItem('jamu_notifications') || '{}');
-    let adminsData = JSON.parse(localStorage.getItem('jamu_admins') || '{}');
-
-    function saveData(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
-    }
+    let ordersData = {};
+    let productsData = {};
+    let notificationsData = {};
+    let adminsData = {};
 
     function calculateSubtotal(priceString) {
         if (!priceString) return 0;
@@ -473,11 +488,27 @@
         return prices.reduce((acc, curr) => acc + (parseFloat(curr.trim()) || 0), 0);
     }
 
-    // INITIAL RENDER
-    window.addEventListener('DOMContentLoaded', () => {
+    // --- REALTIME LISTENERS FIREBASE ---
+    db.ref('jamu_products').on('value', (snapshot) => {
+        productsData = snapshot.val() || {};
         renderProducts();
+    });
+
+    db.ref('jamu_notifications').on('value', (snapshot) => {
+        notificationsData = snapshot.val() || {};
         renderNotifications();
+    });
+
+    db.ref('jamu_orders').on('value', (snapshot) => {
+        ordersData = snapshot.val() || {};
         renderHistory();
+    });
+
+    db.ref('jamu_admins').on('value', (snapshot) => {
+        adminsData = snapshot.val() || {};
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
         checkAdminAuth();
     });
 
@@ -584,7 +615,7 @@
         tbody.innerHTML = html || '<tr><td colspan="9" style="text-align:center;">Belum ada history pesanan masuk.</td></tr>';
     };
 
-    // FORM ACTIONS & LOCALSTORAGE HANDLING
+    // FORM ACTIONS & FIREBASE DATABASE OPERASI
     window.submitOrder = function(e) {
         e.preventDefault();
         const wa = document.getElementById('cust-wa').value.trim();
@@ -608,9 +639,7 @@
             createdAt: new Date().toLocaleString('id-ID')
         };
 
-        ordersData[orderId] = newOrder;
-        saveData('jamu_orders', ordersData);
-        renderHistory();
+        db.ref('jamu_orders/' + orderId).set(newOrder);
 
         const textWA = `Halo Admin Jamu Mbak Ari, saya ingin memesan jamu:%0A%0A` +
                        `*Nama:* ${encodeURIComponent(newOrder.name)}%0A` +
@@ -632,9 +661,7 @@
         const reader = new FileReader();
         reader.onload = function() {
             const prodId = 'prod_' + Date.now();
-            productsData[prodId] = { name, price, img: reader.result };
-            saveData('jamu_products', productsData);
-            renderProducts();
+            db.ref('jamu_products/' + prodId).set({ name, price, img: reader.result });
             alert('Produk Jamu berhasil ditambahkan ke katalog!');
             document.getElementById('prod-name').value = '';
             document.getElementById('prod-price').value = '';
@@ -645,9 +672,7 @@
 
     window.deleteProduct = function(key) {
         if (confirm("Hapus produk jamu ini dari daftar?")) {
-            delete productsData[key];
-            saveData('jamu_products', productsData);
-            renderProducts();
+            db.ref('jamu_products/' + key).remove();
         }
     };
 
@@ -658,15 +683,13 @@
 
         if (!id) {
             const notifId = 'notif_' + Date.now();
-            notificationsData[notifId] = text;
+            db.ref('jamu_notifications/' + notifId).set(text);
         } else {
-            notificationsData[id] = text;
+            db.ref('jamu_notifications/' + id).set(text);
             document.getElementById('notif-id').value = '';
             document.getElementById('notif-btn').innerText = 'Tambah Notifikasi';
         }
 
-        saveData('jamu_notifications', notificationsData);
-        renderNotifications();
         document.getElementById('notif-text').value = '';
     };
 
@@ -678,32 +701,21 @@
 
     window.deleteNotif = function(key) {
         if (confirm("Hapus notifikasi ini?")) {
-            delete notificationsData[key];
-            saveData('jamu_notifications', notificationsData);
-            renderNotifications();
+            db.ref('jamu_notifications/' + key).remove();
         }
     };
 
     window.updateOrderDetails = function(key, field, value) {
-        if (ordersData[key]) {
-            ordersData[key][field] = value;
-            saveData('jamu_orders', ordersData);
-        }
+        db.ref(`jamu_orders/${key}/${field}`).set(value);
     };
 
     window.updateOrderStatus = function(key, status) {
-        if (ordersData[key]) {
-            ordersData[key].status = status;
-            saveData('jamu_orders', ordersData);
-            renderHistory();
-        }
+        db.ref(`jamu_orders/${key}/status`).set(status);
     };
 
     window.deleteOrder = function(key) {
         if (confirm("Yakin ingin menghapus riwayat pesanan ini secara permanen?")) {
-            delete ordersData[key];
-            saveData('jamu_orders', ordersData);
-            renderHistory();
+            db.ref('jamu_orders/' + key).remove();
         }
     };
 
@@ -725,8 +737,7 @@
         }
 
         const adminId = 'admin_' + Date.now();
-        adminsData[adminId] = { name, wa, pass };
-        saveData('jamu_admins', adminsData);
+        db.ref('jamu_admins/' + adminId).set({ name, wa, pass });
         alert('Pendaftaran Admin Berhasil! Silakan masuk via menu Login.');
         window.toggleAuth('login');
     };
